@@ -1,0 +1,32 @@
+name: CI
+
+on: [push, pull_request]
+
+jobs:
+  linters:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Build Docker image
+      run: docker build -t app .
+    - name: Run linters
+      run: |
+        docker run app bash -c "
+        source ~/.bashrc && \
+        conda activate python_env && \
+        ruff check . && \
+        mypy . "
+
+  tests:
+    runs-on: ubuntu-latest
+    needs: linters
+    steps:
+    - uses: actions/checkout@v4
+    - name: Build Docker image
+      run: docker build -t app .
+    - name: Run tests
+      run: |
+        docker run app bash -c "
+        source ~/.bashrc && \
+        conda activate python_env && \
+        poetry run pytest tests/"

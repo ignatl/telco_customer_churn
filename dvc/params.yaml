@@ -1,0 +1,22 @@
+split:
+  input_path: data/raw_data/customers.csv
+  output_dir: data/split
+
+feature:
+  column_name: first_name
+  output_dir: data/features/mock_feature
+  obj_path: data/obj/mock_feature.pkl
+
+train_model:
+  output_dir: data/predictions
+  obj_path: data/obj/constant_model.pkl
+  constant: 42.0
+
+inference:
+  inference_data_path: data/raw_data/test_data.csv
+  output_path: data/inference/inference.parquet
+  obj_path: data/obj/inference.pkl
+
+evaluate:
+  metrics_path: data/evaluate/metrics.csv
+

@@ -1,0 +1,47 @@
+repos:
+- repo: https://github.com/astral-sh/ruff-pre-commit
+    # Ruff version.
+  rev: v0.4.2
+  hooks:
+      # Run the linter.
+  - id: ruff
+    args: [--fix]
+      # Run the formatter.
+  - id: ruff-format
+
+- repo: https://github.com/pre-commit/mirrors-mypy
+  rev: v1.15.0    # Use the latest stable version
+  hooks:
+  - id: mypy
+    additional_dependencies: []
+- repo: https://github.com/iterative/dvc
+  rev: 3.59.0
+  hooks:
+  - id: dvc-pre-commit
+    additional_dependencies:
+    - .[all]
+    language_version: python3
+    stages:
+    - pre-commit
+  - id: dvc-pre-push
+    additional_dependencies:
+    - .[all]
+    language_version: python3
+    stages:
+    - pre-push
+  - id: dvc-post-checkout
+    additional_dependencies:
+    - .[all]
+    language_version: python3
+    stages:
+    - post-checkout
+    always_run: true
+
+- repo: local
+  hooks:
+    - id: update-dvc-dag
+      name: Update DVC DAG
+      entry: python scripts/generate_dag.py
+      language: python
+      pass_filenames: false
+      always_run: true

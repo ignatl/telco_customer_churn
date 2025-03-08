@@ -1,0 +1,5 @@
+[core]
+    remote = gcs
+['remote "gcs"']
+    url = gs://dvc_ds_template
+    projectname = kaggle

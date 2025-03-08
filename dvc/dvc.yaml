@@ -1,0 +1,78 @@
+stages:
+  split:
+    wdir: ..
+    cmd: python ds_template/dvc_steps/split.py --input_path ${split.input_path}
+      --output_dir ${split.output_dir}
+    deps:
+    - ds_template/dvc_steps/split.py
+    - ${split.input_path}
+    params:
+    - dvc/params.yaml:
+      - split
+    outs:
+    - ${split.output_dir}
+  featurize:
+    wdir: ..
+    cmd: python ds_template/dvc_steps/featurize.py --column_name ${feature.column_name}
+      --input_dir ${split.output_dir} --output_dir ${feature.output_dir}
+      --obj_path ${feature.obj_path}
+    deps:
+    - ds_template/dvc_steps/featurize.py
+    - ${split.output_dir}
+    - ds_template/features/mock_feature.py
+    params:
+    - dvc/params.yaml:
+      - feature
+    outs:
+    - ${feature.output_dir}
+    - ${feature.obj_path}
+  train_model:
+    wdir: ..
+    cmd: python ds_template/dvc_steps/train_model.py --feature-path ${feature.output_dir}
+      --data-dir ${split.output_dir} --output-dir ${train_model.output_dir}
+      --model-path ${train_model.obj_path} --constant ${train_model.constant}
+    deps:
+    - ds_template/dvc_steps/train_model.py
+    - ds_template/models/constant_model.py
+    - ${feature.obj_path}
+    - ${split.output_dir}
+    params:
+    - dvc/params.yaml:
+      - train_model
+    outs:
+    - ${train_model.output_dir}
+    - ${train_model.obj_path}
+  inference:
+    wdir: ..
+    cmd: python ds_template/dvc_steps/do_inference.py --train_data_dir ${split.output_dir}
+      --train_preds_path ${train_model.output_dir} --inference_data_path ${inference.inference_data_path}
+      --feature_path ${feature.obj_path} --model_path ${train_model.obj_path}
+      --output_path ${inference.output_path} --inference_path ${inference.obj_path}
+    deps:
+    - ds_template/dvc_steps/do_inference.py
+    - ds_template/inference/inference.py
+    - ds_template/features/mock_feature.py
+    - ds_template/models/constant_model.py
+    - ${inference.inference_data_path}
+    - ${split.output_dir}
+    - ${feature.obj_path}
+    - ${train_model.obj_path}
+    params:
+    - dvc/params.yaml:
+      - inference
+    outs:
+    - ${inference.output_path}
+    - ${inference.obj_path}
+  evaluate:
+    wdir: ..
+    cmd: python ds_template/dvc_steps/evaluate.py --predictions_dir ${train_model.output_dir}
+      --target_dir ${split.output_dir} --metrics_path ${evaluate.metrics_path}
+    deps:
+    - ds_template/dvc_steps/evaluate.py
+    - ${train_model.output_dir}
+    - ${split.output_dir}
+    params:
+    - dvc/params.yaml:
+      - evaluate
+    outs:
+    - ${evaluate.metrics_path}

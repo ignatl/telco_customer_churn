@@ -1,0 +1,66 @@
+[tool.poetry]
+name = "ds_template"
+version = "0.1.0"
+description = "Template for DS projects"
+authors = ["Ignat Levagin <ignatlevagin@gmail.com>"]
+license = "MIT"
+readme = "README.md"
+packages = [{ include = "ds_template" }]
+
+[tool.poetry.dependencies]
+pre-commit = "4.1.*"
+python = ">=3.13"
+numpy = "2.2.*"
+polars = "1.22.*"
+scikit-learn = "1.6.*"
+matplotlib = "3.10.*"
+dvc = "3.59.*"
+dvc-gs = "3.0.*"
+jupyterlab = "4.3.*"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "8.3.*"
+ruff = "0.9.*"
+mypy = "1.15.*"
+
+[build-system]
+requires = ["poetry-core>=2.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.ruff]
+line-length = 120
+
+[tool.ruff.lint]
+select = [
+    "E",  # pycodestyle errors
+    "W",  # pycodestyle warnings
+    "F",  # pyflakes
+    "I",  # isort
+    "B",  # flake8-bugbear
+    "C4", # flake8-comprehensions
+    "N",  # PEP8 naming convetions
+    "D",  # pydocstyle
+]
+ignore = [
+    "C901", # too complex
+    "D401", # imperative mood
+    "N803", # matrices are upper case
+    "N806", # matrices are upper case
+    "N815", # variable names are upper case
+]
+
+[tool.ruff.lint.pydocstyle]
+convention = "google"
+
+[tool.mypy]
+python_version = "3.13"
+disallow_untyped_defs = true
+disallow_incomplete_defs = true
+check_untyped_defs = true
+disallow_untyped_decorators = true
+no_implicit_optional = true
+warn_redundant_casts = true
+warn_unused_ignores = true
+warn_return_any = true
+warn_unreachable = true
+strict_optional = true
