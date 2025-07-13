@@ -174,3 +174,4 @@ cython_debug/
 Untitled.ipynb
 gcp_creds.json
 temp.py
+data/

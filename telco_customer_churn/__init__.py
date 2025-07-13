@@ -2,5 +2,5 @@
 
 from pathlib import Path
 
-MAIN_DIR = Path(__file__).parent
+MAIN_DIR = Path(__file__).parent.parent
 DATA_DIR = MAIN_DIR / "data"
